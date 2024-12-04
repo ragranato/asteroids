@@ -28,22 +28,29 @@ def main():
             if event.type == pygame.QUIT:
                 return        
         screen.fill((0, 0, 0))
-        
+        asteroids_to_split = []
+        shots_to_remove = []
+
         for item in updatable:
             item.update(dt)
-        for item in asteroids:
-            if item.collision(player):
+        for asteroid in asteroids:
+            if asteroid.collision(player):
                 print("Game Over!")
                 sys.exit()
             for shot in shots:
-                if shot.collision(item):
-                    shot.kill()
-                    item.kill()
+                if asteroid.collision(shot):
+                    print("asteroid hit")                    
+                    asteroids_to_split.append(asteroid)
+                    shots_to_remove.append(shot)
+        for shot in shots_to_remove:
+            shot.kill()
+        for asteroid in asteroids_to_split:
+            asteroid.split(asteroids)
         for item in drawable:
             item.draw(screen)
         pygame.display.flip()
         time = clock.tick(60)
-        dt += time / 10000
+        dt += time / 50000
         
     print("Starting asteroids!")
     print(f"Screen width: {SCREEN_WIDTH}")
